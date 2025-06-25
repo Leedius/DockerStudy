@@ -1,0 +1,3 @@
+ls
+mongosh
+exit

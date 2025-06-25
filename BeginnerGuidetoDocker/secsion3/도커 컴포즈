@@ -1,0 +1,12 @@
+1. 설치 확인
+
+docker-compose version
+docker-compose version 1.26.2, build eefe0d31
+docker-py version: 4.2.2
+CPython version: 3.7.7
+OpenSSL version: OpenSSL 1.1.1g 21 Apr 2020
+
+리눅스는 다음 명령어로 설치합니다
+sudo curl -L "https://github.co/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)"
+
+sudo chmod +x /usr/local/bin/docker-compose
