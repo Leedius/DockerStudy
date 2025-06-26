@@ -1,0 +1,6 @@
+services:
+  my-web-server: # 서비스에 붙이는 이름
+    container_name: webserver
+    image: nginx
+    ports:
+      - 80:80
