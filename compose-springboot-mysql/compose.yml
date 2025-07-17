@@ -1,0 +1,58 @@
+services:
+  my-server:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on: # depends_on 하위에있는 서비스가 healthy해야 my-server가 서비스가 실행된다
+      my-db:
+        condition: service_healthy
+      my-cache-server:
+        condition: service_healthy
+      my-db-mongo:
+        condition: service_healthy
+
+  my-db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pwd1234
+      MYSQL_DATABASE: mydb
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    ports:
+      - 3308:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"] # 명령어
+      interval: 5s # 5초 마다
+      retries: 10 # 10번 재시도
+
+  my-db-mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pwd1234
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "-u",
+          "root",
+          "-p",
+          "pwd1234",
+          "--authenticationDatabase",
+          "admin",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
+      interval: 5s
+      retries: 10
+
+  my-cache-server:
+    image: redis
+    ports:
+      - 6389:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
